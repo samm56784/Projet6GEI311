@@ -18,10 +18,16 @@ while(True):
     cv2.imshow('frame', frame)
     frame2 = cv2.cvtColor(frame2, cv2.COLOR_BGR2RGB)
     pil_im = Image.fromarray(frame2)
+    im = pil_im.filter(ImageFilter.FIND_EDGES)
+    im = im.convert('RGB')
+    open_cv_image = np.array(im)
+    # Convert RGB to BGR
+    open_cv_image = open_cv_image[:, :, ::-1].copy()
+    cv2.imshow('open_cv_image',open_cv_image)
     #os.path.join(r"E:\TempDump",str(i),r".png")
-    path = os.path.join(os.getcwd(), r"TempDump", str(i) + r".jpeg")
+    path = os.path.join(pathdir, str(i) + r".jpeg")
     #path = os.path.join(r"E:\TempDump", str(i) + r".jpeg" )
-    pil_im.save(path)
+    im.save(path)
     #pil_im.show()
     i = i + 1
 
