@@ -5,6 +5,9 @@ import shutil
 from PIL import Image,ImageFilter,ImageEnhance
 import os
 import os.path
+n = 2
+size2 = 635, 476
+size = 635*n, 476*n
 cap = cv2.VideoCapture('http://205.237.248.39/axis-cgi/mjpg/video.cgi?resolution=635x476&dummy=1603113452812')
 i = 0
 pathdir = os.path.join(os.getcwd(), r"TempDump" )
@@ -18,17 +21,31 @@ while(True):
     cv2.imshow('frame', frame)
     frame2 = cv2.cvtColor(frame2, cv2.COLOR_BGR2RGB)
     pil_im = Image.fromarray(frame2)
-    #im = pil_im.filter(ImageFilter.FIND_EDGES)
+    # im = pil_im.filter(ImageFilter.FIND_EDGES)
     im = pil_im.convert("L")
 
-    enh = ImageEnhance.Brightness(im).enhance(5.0)
-    enh = ImageEnhance.Contrast(enh).enhance(4.0)
+    # enh = ImageEnhance.Brightness(im).enhance(5.0)
+    enh = im
+    enh = enh.resize(size, resample=Image.Resampling.LANCZOS)
+    enh = ImageEnhance.Brightness(enh).enhance(3.0)
+    enh = ImageEnhance.Contrast(enh).enhance(2.0)
+    enh = enh.filter(ImageFilter.MedianFilter(size=7))
+    # enh = ImageEnhance.Sharpness(enh).enhance(10.0)
+    # enh = enh.filter(ImageFilter.CONTOUR)
     enh = enh.filter(ImageFilter.FIND_EDGES)
-    enh = enh.filter(ImageFilter.GaussianBlur(radius=1))
-    enh = enh.filter(ImageFilter.MedianFilter(size=1))
-    im = im.filter(ImageFilter.CONTOUR)
+
+    enh = enh.filter(ImageFilter.GaussianBlur(radius=2))
+    #enh = enh.filter(ImageFilter.MedianFilter(size=5))
+    enh = ImageEnhance.Sharpness(enh).enhance(15.0)
+    enh = enh.resize(size2, resample=Image.Resampling.LANCZOS)
+    enh = ImageEnhance.Brightness(enh).enhance(2.0)
+    im = im.resize(size, resample=Image.Resampling.LANCZOS)
+    #enh = enh.filter(ImageFilter.MedianFilter(size=13))
+    #im = im.filter(ImageFilter.CONTOUR)
     im = im.filter(ImageFilter.FIND_EDGES)
-    im = im.filter(ImageFilter.GaussianBlur(radius=0))
+    im = ImageEnhance.Brightness(im).enhance(2.0)
+    im = im.filter(ImageFilter.GaussianBlur(radius=1))
+    im = im.resize(size2, resample=Image.Resampling.LANCZOS)
     im = im.convert('RGB')
     enh = enh.convert(('RGB'))
     open_cv_image2 = np.array(enh)
@@ -38,7 +55,7 @@ while(True):
     open_cv_image = np.array(im)
     # Convert RGB to BGR
     open_cv_image = open_cv_image[:, :, ::-1].copy()
-    cv2.imshow('open_cv_image',open_cv_image)
+    cv2.imshow('nuit',open_cv_image)
     #os.path.join(r"E:\TempDump",str(i),r".png")
     path = os.path.join(pathdir, str(i) + r".jpeg")
     #path = os.path.join(r"E:\TempDump", str(i) + r".jpeg" )
