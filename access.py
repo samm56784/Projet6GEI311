@@ -2,7 +2,9 @@
 import cv2
 import numpy as np
 import shutil
-from PIL import Image,ImageFilter,ImageEnhance
+from skimage.io import imread
+from PIL import Image, ImageFilter, ImageEnhance, ImageOps
+from matplotlib import pyplot as plt
 import os
 import os.path
 n = 2
@@ -27,18 +29,19 @@ while(True):
     # enh = ImageEnhance.Brightness(im).enhance(5.0)
     enh = im
     enh = enh.resize(size, resample=Image.Resampling.LANCZOS)
-    enh = ImageEnhance.Brightness(enh).enhance(3.0)
-    enh = ImageEnhance.Contrast(enh).enhance(2.0)
-    enh = enh.filter(ImageFilter.MedianFilter(size=7))
+    #enh = ImageOps.autocontrast(enh, cutoff=2, ignore=None, mask=None, preserve_tone=False)
+    enh = ImageEnhance.Brightness(enh).enhance(2.0)
+    enh = ImageEnhance.Contrast(enh).enhance(1.0)
+    enh = enh.filter(ImageFilter.MedianFilter(size=9))
     # enh = ImageEnhance.Sharpness(enh).enhance(10.0)
     # enh = enh.filter(ImageFilter.CONTOUR)
     enh = enh.filter(ImageFilter.FIND_EDGES)
-
+    enh = ImageEnhance.Brightness(enh).enhance(8.0)
     enh = enh.filter(ImageFilter.GaussianBlur(radius=2))
     #enh = enh.filter(ImageFilter.MedianFilter(size=5))
-    enh = ImageEnhance.Sharpness(enh).enhance(15.0)
+    enh = ImageEnhance.Sharpness(enh).enhance(18.0)
     enh = enh.resize(size2, resample=Image.Resampling.LANCZOS)
-    enh = ImageEnhance.Brightness(enh).enhance(2.0)
+
     im = im.resize(size, resample=Image.Resampling.LANCZOS)
     #enh = enh.filter(ImageFilter.MedianFilter(size=13))
     #im = im.filter(ImageFilter.CONTOUR)
@@ -62,6 +65,9 @@ while(True):
     im.save(path)
     #pil_im.show()
     i = i + 1
+    #photo = np.array(enh)
+    #plt.imshow(photo, interpolation='nearest')
+    #plt.show()
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
