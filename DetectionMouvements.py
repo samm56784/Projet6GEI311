@@ -1,6 +1,6 @@
 from access import *
 
-def DetectionMovement(im,i):
+def DetectionMovement(im, i):
 
     #pil or cv to np
     #addition de matrices np
