@@ -1,7 +1,9 @@
+#import cv2
+#import PIL
 import cv2
-import PIL
-from PIL import Image, ImageEnhance, ImageFilter, ImageOps
 import numpy as np
+from PIL import Image
+from PIL import ImageEnhance, ImageFilter, ImageOps
 
 n = 2
 size2 = 635, 476
@@ -37,8 +39,35 @@ def conversion_image_PIL_vers_cv2(enh):
 
 
 def lecture_video(queue_images):
-
+    #time.sleep(1)
     while True:
+        '''if queue_images.empty():
+            time.sleep(1)
+        else:'''
         image_actuelle = queue_images.get()
         cv2.imshow('video', image_actuelle)
 
+
+#https://stackoverflow.com/questions/17053366/opencv-multiprocessing-in-python-queue-sync
+def image_display(taskqueue, event):
+   #cv2.namedWindow ('image_display', cv2.CV_WINDOW_AUTOSIZE)
+   while True:
+      if event.is_set():
+           break
+      image = taskqueue.get()              # Added
+      if image is None:
+       break             # Added
+      cv2.imshow ('image_display', image)  # Added
+      cv2.waitKey(10)
+      if cv2.waitKey(1) & 0xFF == ord('q'):
+          break
+      # Added
+      continue                             # Added
+
+      '''if taskqueue.get()==None:
+         continue
+      else:
+         image = taskqueue.get()
+         im = Image.fromstring(image['mode'], image['size'], image['pixels'])
+         num_im = np.asarray(im)
+         cv2.imshow ('image_display', num_im)'''

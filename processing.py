@@ -1,15 +1,14 @@
 # reçoit l'image (feed) depuis access.py et modifie les images à l'aide des filtres
 from access import *
 from fonctions_utiles import *
-#from main import *
 import os
 import shutil
 
-
-def processing(queue1, queue2, path):
-
+def processing(queue1, queue2, path, event):
     i = 0
     while True:
+        if event.is_set():
+            break
         frame2 = queue1.get()
         pil_im = conversion_image_cv2_vers_PIL(frame2)
         im = pil_im.convert("L")
@@ -20,7 +19,6 @@ def processing(queue1, queue2, path):
         path2 = os.path.join(path, str(i) + r".jpeg")
         enh.save(path2)
         i = i + 1
-        #if cv2.waitKey(1) & 0xFF == ord('q'):
-           # break
+
 
 
