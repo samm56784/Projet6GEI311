@@ -6,9 +6,11 @@ from access import *
 from processing import *
 from threading import Thread
 from fonctions_utiles import *
+import tkinter as tk
+from tkinter import Button, RIGHT, LEFT
 # Press Maj+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
+ip = 'http://205.237.248.39/axis-cgi/mjpg/video.cgi?resolution=635x476&dummy=1603113452812'
 queueT1 = Queue()
 queueT2 = Queue()
 queueT3 = Queue()
@@ -18,6 +20,33 @@ queueT6 = Queue()
 event = threading.Event()
 event.clear()
 
+def entrer_adresse_camera():
+    global ip
+    app = Tk()
+    app.title("Choix adresse camera")
+    canvas1 = tk.Canvas(app, width=400, height=300)
+    canvas1.pack()
+    entry1 = tk.Entry(app)
+    canvas1.create_window(200,140,window=entry1)
+
+    def default_ip():
+        global ip
+        ip = 'http://205.237.248.39/axis-cgi/mjpg/video.cgi?resolution=635x476&dummy=1603113452812'
+        app.destroy()
+        print(ip)
+    def get_input():
+        global ip
+        ip = entry1.get()
+        #label1 = tk.Label(app, text=x1)
+        #canvas1.create_window(200, 230, window=label1)
+        app.destroy()
+        print(ip)
+    button1 = Button(app, text="get input", command=get_input)
+    button1.pack(side=BOTTOM)
+    button1 = Button(app, text="adresse par défaut", command=default_ip)
+    button1.pack(side=BOTTOM)
+    app.mainloop()
+
 def main():
     global event
     global queueT1
@@ -25,6 +54,7 @@ def main():
     global queueT3
     global queueT5
     global queueT6
+    global ip
     continuer = ''
     pathdir = os.path.join(os.getcwd(), r"TempDump")
     print(pathdir)
@@ -49,7 +79,16 @@ def main():
     canvas = Canvas(root, width=636, height=476)
     canvas.pack()
     update(root1=root, canvas1=canvas, queue1=queueT2)
+    button1 = Button(root, text="Quitter", state=tk.NORMAL, command=lambda: quitter(event, root))
+    button1.pack(side=RIGHT)
+    button2 = Button(root, text="Entrer adresse", state=tk.NORMAL, command=entrer_adresse_camera)
+    button2.pack(side=LEFT)
     root.mainloop()
+    t1.join()
+    t2.join()
+    shutil.rmtree(pathdir)
+    os.mkdir(pathdir)
+    print(ip)
     #cap.release()
 
 ''' while True:
