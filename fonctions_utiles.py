@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 from PIL import Image
 from PIL import ImageEnhance, ImageFilter, ImageOps
-
+from tkinter import NW, Tk, Canvas, PhotoImage
 n = 2
 size2 = 635, 476
 size = 635 * n, 476 * n
@@ -23,7 +23,7 @@ def filtres_images(im):
     enh = enh.filter(ImageFilter.GaussianBlur(radius=1))
     enh = enh.filter(ImageFilter.MedianFilter(size=3))
     enh = ImageEnhance.Sharpness(enh).enhance(8.0)
-    enh = ImageOps.colorize(enh, black="black", white="lime")
+    enh = ImageOps.colorize(enh, black="black", white="white", mid="black")
     enh = ImageEnhance.Brightness(enh).enhance(1.0)
     enh = enh.resize(size2, resample=Image.Resampling.LANCZOS)
     return enh
@@ -71,3 +71,18 @@ def image_display(taskqueue, event):
          im = Image.fromstring(image['mode'], image['size'], image['pixels'])
          num_im = np.asarray(im)
          cv2.imshow ('image_display', num_im)'''
+
+
+def photo_image(img):
+    h, w = img.shape[:2]
+    data = f'P6 {w} {h} 255 '.encode() + img[..., ::-1].tobytes()
+    return PhotoImage(width=w, height=h, data=data, format='PPM')
+
+
+def update(root1, canvas1, queue1):
+    image = queue1.get()
+    if image is not None:
+        photo = photo_image(image)
+        canvas1.create_image(0, 0, image=photo, anchor=NW)
+        canvas1.image = photo
+    root1.after(15, update, root1, canvas1, queue1)

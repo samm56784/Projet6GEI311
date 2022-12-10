@@ -1,7 +1,7 @@
 # https://stackoverflow.com/questions/6893968/how-to-get-the-return-value-from-a-thread
 import threading
 from queue import Queue
-
+from tkinter import NW, Tk, Canvas, PhotoImage
 from access import *
 from processing import *
 from threading import Thread
@@ -41,10 +41,22 @@ def main():
     #t1.join()
     #t2.join()
   #  t6.join()
-    while True:
+
+    root = Tk()
+    root.title("Video")
+    #cap = cv2.VideoCapture("video.mp4")
+
+    canvas = Canvas(root, width=636, height=476)
+    canvas.pack()
+    update(root1=root, canvas1=canvas, queue1=queueT2)
+    root.mainloop()
+    #cap.release()
+
+''' while True:
         image = queueT2.get()  # Added
         if image is None:
             break  # Added
+        
         cv2.imshow('image_display', image)  # Added
         #cv2.waitKey(10)
         if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -54,7 +66,7 @@ def main():
             cv2.destroyAllWindows()
             break
         # Added
-        continue
+        continue'''
 
 
     # See PyCharm help at https://www.jetbrains.com/help/pycharm/
