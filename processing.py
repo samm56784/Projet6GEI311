@@ -4,21 +4,30 @@ from fonctions_utiles import *
 import os
 import shutil
 
-def processing(queue1, queue2, path, event):
+
+def processing(queue1, queue2, queue3, queue4, path, event):
     i = 0
     while True:
         if event.is_set():
-            break
-        frame2 = queue1.get()
-        pil_im = conversion_image_cv2_vers_PIL(frame2)
-        im = pil_im.convert("L")
-        enh = filtres_images(im)
-        open_cv_image2 = conversion_image_PIL_vers_cv2(enh)
-        queue1.task_done()
-        queue2.put(open_cv_image2)
-        path2 = os.path.join(path, str(i) + r".jpeg")
-        enh.save(path2)
-        i = i + 1
+            print("finito proc")
+            exit()
+        else:
+            print("proc")
+            frame2 = queue1.get()
+            pil_im = conversion_image_cv2_vers_PIL(frame2)
+            im = pil_im.convert("L")
+            enh = filtres_images(im)
+            open_cv_image2 = conversion_image_PIL_vers_cv2(enh)
+            queue1.task_done()
+            if i % 2 == 0:
+                queue3.put(np.array(enh))
+            else:
+                queue4.put(np.array(enh))
+
+            queue2.put(open_cv_image2)
+            path2 = os.path.join(path, str(i) + r".jpeg")
+            enh.save(path2)
+            i = i + 1
 
 
 

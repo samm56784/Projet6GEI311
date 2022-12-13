@@ -26,9 +26,9 @@ def filtres_images(im):
     enh = enh.filter(ImageFilter.FIND_EDGES)
     enh = enh.filter(ImageFilter.GaussianBlur(radius=1))
     enh = enh.filter(ImageFilter.MedianFilter(size=3))
-    enh = ImageEnhance.Sharpness(enh).enhance(8.0)
-    enh = ImageOps.colorize(enh, black="black", white="white", mid="black")
-    enh = ImageEnhance.Brightness(enh).enhance(1.0)
+    enh = ImageEnhance.Sharpness(enh).enhance(9.0)
+    enh = ImageOps.colorize(enh, black="black", white="white")
+    enh = ImageEnhance.Brightness(enh).enhance(1.5)
     enh = enh.resize(size2, resample=Image.Resampling.LANCZOS)
     return enh
 
@@ -89,11 +89,12 @@ def update(root1, canvas1, queue1):
         photo = photo_image(image)
         canvas1.create_image(0, 0, image=photo, anchor=NW)
         canvas1.image = photo
-    root1.after(15, update, root1, canvas1, queue1)
+    root1.after(5, update, root1, canvas1, queue1)
 
 def quitter(event, root):
     event.set()
     root.destroy()
+
 
 '''def entrer_adresse_camera(ip1):
     app = Tk()
