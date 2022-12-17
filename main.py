@@ -88,7 +88,7 @@ def main():
 
     canvas = Canvas(root, width=636, height=476)
     canvas.pack()
-    update(root1=root, canvas1=canvas, queue1=queueT8)
+    update(root1=root, canvas1=canvas, queue1=queueT1)
     button1 = Button(root, text="Quitter", state=tk.NORMAL, command=lambda: quitter(event, root))
     button1.pack(side=RIGHT)
     button2 = Button(root, text="Entrer adresse", state=tk.NORMAL, command=entrer_adresse_camera)

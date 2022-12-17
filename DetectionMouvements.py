@@ -6,10 +6,10 @@ import os
 
 
 def DetectionMouvement(queue1, queue2, queue3, event):
-    while not event.is_set():
+    while True:
         if event.is_set():
             print("finito det")
-            break
+            exit()
         else:
             im1 = queue1.get()
             im2 = queue2.get()
