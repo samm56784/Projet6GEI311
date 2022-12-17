@@ -1,5 +1,6 @@
 # https://stackoverflow.com/questions/6893968/how-to-get-the-return-value-from-a-thread
 import threading
+import time
 from queue import Queue
 from tkinter import NW, Tk, Canvas, PhotoImage
 from access import *
@@ -11,7 +12,8 @@ from tkinter import Button, RIGHT, LEFT
 from DetectionMouvements import DetectionMouvement
 # Press Maj+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-ip = 'http://205.237.248.39/axis-cgi/mjpg/video.cgi?resolution=635x476&dummy=1603113452812'
+#ip = 'http://205.237.248.39/'
+#ip = 'http://72.227.122.62:8081/'
 queueT1 = Queue()
 queueT2 = Queue()
 queueT3 = Queue()
@@ -23,7 +25,11 @@ queueT8 = Queue()
 queueT9 = Queue()
 event = threading.Event()
 event.clear()
-
+event2 = threading.Event()
+event2.clear()
+event3 = threading.Event()
+event3.clear()
+ip = 'http://205.237.248.39/axis-cgi/mjpg/video.cgi?resolution=635x476&dummy=1603113452812'
 def entrer_adresse_camera():
     global ip
     app = Tk()
@@ -41,10 +47,16 @@ def entrer_adresse_camera():
     def get_input():
         global ip
         ip = entry1.get()
+        queueT9.put(ip)
         #label1 = tk.Label(app, text=x1)
         #canvas1.create_window(200, 230, window=label1)
+        event2.set()
+        event3.set()
+        time.sleep(1)
+        event3.clear()
         app.destroy()
         print(ip)
+
     button1 = Button(app, text="get input", command=get_input)
     button1.pack(side=BOTTOM)
     button1 = Button(app, text="adresse par défaut", command=default_ip)
@@ -53,6 +65,7 @@ def entrer_adresse_camera():
 
 def main():
     global event
+    global event2
     global queueT1
     global queueT2#cv2
     global queueT3
@@ -61,6 +74,7 @@ def main():
     global queueT6
     global queueT7 #
     global queueT8
+    global queueT9
     global ip
     continuer = ''
     pathdir = os.path.join(os.getcwd(), r"TempDump")
@@ -69,11 +83,11 @@ def main():
         os.mkdir(pathdir)
 
     # définition des threads du programme (accès aux images de la caméra, processing(filtres), algo de détection de mouvement
-    t1 = Thread(target=acquisition_images, args=(queueT1, queueT6, event, ))
+    t1 = Thread(target=acquisition_images, args=(queueT1, queueT6, event, event2, event3, queueT9, ))
     t1.start()
-    t2 = Thread(target=processing, args=(queueT1, queueT2, queueT4, queueT7, pathdir, event,))
+    t2 = Thread(target=processing, args=(queueT1, queueT2, queueT4, queueT7, pathdir, event, event3, ))
     t2.start()
-    t3 = Thread(target=DetectionMouvement, args=(queueT4, queueT7, queueT8, event, ))
+    t3 = Thread(target=DetectionMouvement, args=(queueT4, queueT7, queueT8, event, event3))
     t3.start()
 
     #t6 = Thread(target=image_display, args=(queueT2, event, ))

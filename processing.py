@@ -5,12 +5,21 @@ import os
 import shutil
 
 
-def processing(queue1, queue2, queue3, queue4, path, event):
+def processing(queue1, queue2, queue3, queue4, path, event, event3):
     i = 0
     while True:
         if event.is_set():
             print("finito proc")
             exit()
+        if event3.is_set():
+            with queue1.mutex:
+                queue1.queue.clear()
+            with queue2.mutex:
+                queue2.queue.clear()
+            with queue3.mutex:
+                queue3.queue.clear()
+            with queue4.mutex:
+                queue4.queue.clear()
         else:
             print("proc")
             frame2 = queue1.get()

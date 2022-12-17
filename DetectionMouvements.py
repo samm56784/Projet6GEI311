@@ -5,11 +5,19 @@ from PIL import Image
 import os
 
 
-def DetectionMouvement(queue1, queue2, queue3, event):
+def DetectionMouvement(queue1, queue2, queue3, event, event3):
     while True:
         if event.is_set():
             print("finito det")
             exit()
+            break
+        if event3.is_set():
+            with queue1.mutex:
+                queue1.queue.clear()
+            with queue2.mutex:
+                queue2.queue.clear()
+            with queue3.mutex:
+                queue3.queue.clear()
         else:
             im1 = queue1.get()
             im2 = queue2.get()

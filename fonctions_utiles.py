@@ -25,10 +25,10 @@ def filtres_images(im):
     enh = enh.resize(size, resample=Image.Resampling.LANCZOS)
     enh = enh.filter(ImageFilter.FIND_EDGES)
     enh = enh.filter(ImageFilter.GaussianBlur(radius=1))
-    enh = enh.filter(ImageFilter.MedianFilter(size=3))
+    enh = enh.filter(ImageFilter.MedianFilter(size=5))
     enh = ImageEnhance.Sharpness(enh).enhance(9.0)
     enh = ImageOps.colorize(enh, black="black", white="white")
-    enh = ImageEnhance.Brightness(enh).enhance(1.5)
+    enh = ImageEnhance.Brightness(enh).enhance(0.05)
     enh = enh.resize(size2, resample=Image.Resampling.LANCZOS)
     return enh
 
