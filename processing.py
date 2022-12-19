@@ -5,7 +5,7 @@ import os
 import shutil
 
 
-def processing(queue1, queue2, queue3, queue4, path, event, event3, event4):
+def processing(queue1, queue2, queue3, queue4,queue5, path, event, event3, event4):
     i = 0
     while True:
         if event.is_set():
@@ -31,7 +31,7 @@ def processing(queue1, queue2, queue3, queue4, path, event, event3, event4):
             else:
                 enh = filtres_images(im)
             open_cv_image2 = conversion_image_PIL_vers_cv2(enh)
-            open_cv_image3 =conversion_image_PIL_vers_cv2(im)
+            #open_cv_image3 =conversion_image_PIL_vers_cv2(im)
             queue1.task_done()
             if i % 2 == 0:
                 queue3.put(np.array(enh))
@@ -39,6 +39,7 @@ def processing(queue1, queue2, queue3, queue4, path, event, event3, event4):
                 queue4.put(np.array(enh))
 
             queue2.put(open_cv_image2)
+            queue5.put(open_cv_image2)
             #path2 = os.path.join(path, str(i) + r".jpeg")
             #enh.save(path2)
             i = i + 1

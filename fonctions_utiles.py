@@ -23,11 +23,14 @@ def conversion_image_cv2_vers_PIL(image_cv2):
 def filtres_images(im):
     enh = im
     #enh = enh.resize(size, resample=Image.Resampling.LANCZOS)
-    enh = enh.filter(ImageFilter.FIND_EDGES)
-    enh = enh.filter(ImageFilter.GaussianBlur(radius=2))
+    enh = ImageEnhance.Sharpness(enh).enhance(6.0)
+
+
+    enh = enh.filter(ImageFilter.GaussianBlur(radius=1))
     enh = enh.filter(ImageFilter.MedianFilter(size=3))
-    enh = ImageEnhance.Sharpness(enh).enhance(11.0)
-    enh = ImageOps.colorize(enh, black="black", white="white", mid="black")
+    enh = enh.filter(ImageFilter.FIND_EDGES)
+    enh = ImageOps.colorize(enh, black="black", white="white")
+
     enh = ImageEnhance.Brightness(enh).enhance(2.04)
     #enh = enh.resize(size2, resample=Image.Resampling.LANCZOS)
     return enh
@@ -35,12 +38,12 @@ def filtres_images(im):
 def filtres_images2(im):
     enh = im
     # enh = enh.resize(size, resample=Image.Resampling.LANCZOS)
-    #enh = enh.filter(ImageFilter.FIND_EDGES)
-    enh = enh.filter(ImageFilter.GaussianBlur(radius=2))
+    enh = enh.filter(ImageFilter.FIND_EDGES)
+    #enh = enh.filter(ImageFilter.GaussianBlur(radius=2))
     enh = enh.filter(ImageFilter.MedianFilter(size=3))
     enh = ImageEnhance.Sharpness(enh).enhance(11.0)
-    enh = ImageOps.colorize(enh, black="black", white="white", mid="black")
-    enh = ImageEnhance.Brightness(enh).enhance(4.04)
+    enh = ImageOps.colorize(enh, black="black", white="white")
+    enh = ImageEnhance.Brightness(enh).enhance(8.04)
     # enh = enh.resize(size2, resample=Image.Resampling.LANCZOS)
     return enh
 
