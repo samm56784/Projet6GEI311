@@ -2,7 +2,7 @@ from PIL import Image
 from PIL import ImageEnhance, ImageFilter, ImageOps, ImageChops
 from fonctions_utiles import *
 
-def somme_finale(queue1, queue2, queue3, event):
+def somme_finale(queue1, queue2, queue3,queue4, event):
 
     while True:
         if event.is_set():
@@ -15,3 +15,4 @@ def somme_finale(queue1, queue2, queue3, event):
             im4 = ImageChops.multiply(im3, im2)
             im5 = conversion_image_PIL_vers_cv2(im4)
             queue3.put(im5)
+            queue4.put(im5)

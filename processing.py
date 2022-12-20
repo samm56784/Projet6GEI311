@@ -5,7 +5,7 @@ import os
 import shutil
 
 
-def processing(queue1, queue2, queue3, queue4,queue5, path, event, event3, event4):
+def processing(queue1, queue2, queue3, queue4, queue5, path, event, event3, event4):
     i = 0
     while True:
         if event.is_set():

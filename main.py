@@ -27,7 +27,10 @@ queueT8 = Queue()
 queueT9 = Queue()
 queueT10 = Queue()
 queueT11 = Queue()
+queueT12 = Queue()
+queueT13 = Queue()
 queueT20 = Queue()
+queueT14 = Queue()
 
 event = threading.Event()
 event.clear()
@@ -42,10 +45,10 @@ def entrer_adresse_camera():
     global ip
     app = Tk()
     app.title("Choix adresse camera")
-    canvas1 = tk.Canvas(app, width=400, height=300)
+    canvas1 = tk.Canvas(app, width=400, height=100)
     canvas1.pack()
     entry1 = tk.Entry(app)
-    canvas1.create_window(200,140,window=entry1)
+    canvas1.create_window(200,50,window=entry1)
 
     def default_ip():
         ip = 'http://205.237.248.39/axis-cgi/mjpg/video.cgi?resolution=635x476&dummy=1603113452812'
@@ -72,9 +75,12 @@ def entrer_adresse_camera():
         print(ip)
 
     button1 = Button(app, text="get input", command=get_input)
-    button1.pack(side=BOTTOM)
-    button1 = Button(app, text="adresse par défaut", command=default_ip)
-    button1.pack(side=BOTTOM)
+    button1.pack(side=LEFT)
+    button2 = Button(app, text="adresse par défaut", command=default_ip)
+    button2.pack(side=BOTTOM)
+    button3 = Button(app, text="Annuler", command=app.destroy)
+    button3.pack(side=RIGHT)
+
     app.mainloop()
 def changer_mode_filtre(num):
     global event4
@@ -83,16 +89,6 @@ def changer_mode_filtre(num):
     else:
         event4.clear()
 
-
-def affichage_image(queue):
-    app2 = Tk()
-    app2.title("Affichage")
-    canvas2 = tk.Canvas(app2, width=400, height=300)
-    canvas2.pack()
-    update(root1=app2, canvas1=canvas2, queue1=queue)
-    button1 = Button(app2, text="Quitter", state=tk.NORMAL, command=app2.destroy)
-    button1.pack(side=RIGHT)
-    app2.mainloop()
 
 def main():
     global event
@@ -110,8 +106,22 @@ def main():
     global queueT9
     global queueT10
     global queueT11
+    global queueT12
+    global queueT13
     global queueT20
+    global queueT14
     global ip
+
+    def affichage_image():
+        app2 = Tk()
+        app2.title("Affichage")
+        canvas2 = Canvas(app2, width=636, height=476)
+        canvas2.pack()
+        button11 = Button(app2, text="Quitter", state=tk.NORMAL, command=app2.destroy)
+        button11.pack(side=RIGHT)
+        update(root1=app2, canvas1=canvas2, queue1=queueT13)
+        app2.mainloop()
+
     continuer = ''
     pathdir = os.path.join(os.getcwd(), r"TempDump")
     print(pathdir)
@@ -123,9 +133,9 @@ def main():
     t1.start()
     t2 = Thread(target=processing, args=(queueT1, queueT2, queueT4, queueT7, queueT10, pathdir, event, event3, event4,))
     t2.start()
-    t3 = Thread(target=DetectionMouvement, args=(queueT4, queueT7, queueT8, event, event3))
+    t3 = Thread(target=DetectionMouvement, args=(queueT4, queueT7, queueT8, queueT14, event, event3))
     t3.start()
-    t4 = Thread(target=somme_finale, args=(queueT20, queueT8, queueT11, event,))
+    t4 = Thread(target=somme_finale, args=(queueT20, queueT8, queueT11, queueT13, event,))
     t4.start()
     #t6 = Thread(target=image_display, args=(queueT2, event, ))
   #  t6.start()
@@ -139,19 +149,19 @@ def main():
 
     canvas = Canvas(root, width=636, height=476)
     canvas.pack()
-    update(root1=root, canvas1=canvas, queue1=queueT11)
+    update(root1=root, canvas1=canvas, queue1=queueT13)
     button1 = Button(root, text="Quitter", state=tk.NORMAL, command=lambda: quitter(event, root))
     button1.pack(side=RIGHT)
     button2 = Button(root, text="Entrer adresse", state=tk.NORMAL, command=entrer_adresse_camera)
     button2.pack(side=LEFT)
-    button3 = Button(root, text="Mode jour", state=tk.NORMAL, command=lambda: changer_mode_filtre(1))
+    button3 = Button(root, text="Mode jour", state=tk.NORMAL, command=lambda: changer_mode_filtre(0))
     button3.pack(side=LEFT)
-    button4 = Button(root, text="Mode nuit", state=tk.NORMAL, command=lambda: changer_mode_filtre(0))
+    button4 = Button(root, text="Mode nuit", state=tk.NORMAL, command=lambda: changer_mode_filtre(1))
     button4.pack(side=LEFT)
-    button5 = Button(root, text="Afficher image filtrée", state=tk.NORMAL, command=lambda: affichage_image(queueT10))
-    button5.pack(side=BOTTOM)
-    button6 = Button(root, text="Afficher image soustraite", state=tk.NORMAL, command=lambda: affichage_image(queueT11))
-    button6.pack(side=BOTTOM)
+    #button5 = Button(root, text="Afficher image filtrée", state=tk.NORMAL, command=affichage_image)
+    #button5.pack(side=BOTTOM)
+    #button6 = Button(root, text="Afficher image soustraite", state=tk.NORMAL, command=affichage_image)
+    #button6.pack(side=BOTTOM)
     root.mainloop()
     t1.join()
     t2.join()

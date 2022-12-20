@@ -6,7 +6,7 @@ from PIL import ImageEnhance, ImageFilter, ImageOps, ImageChops
 import os
 
 
-def DetectionMouvement(queue1, queue2, queue3, event, event3):
+def DetectionMouvement(queue1, queue2, queue3, queue4, event, event3):
     while True:
         if event.is_set():
             exit()
@@ -25,7 +25,7 @@ def DetectionMouvement(queue1, queue2, queue3, event, event3):
             im1 = Image.fromarray(im1, mode="RGB")
             im2 = queue2.get()
             im2 = Image.fromarray(im2, mode="RGB")
-            im3 = ImageChops.multiply(im1, im2)
+            #im3 = ImageChops.multiply(im1, im2)
             im4 = ImageChops.difference(im1, im2)
             im4 = im4.convert("L")
             im4 = ImageOps.colorize(im4, black="white", white="red", mid="white")
@@ -34,9 +34,12 @@ def DetectionMouvement(queue1, queue2, queue3, event, event3):
             #im3 = np.subtract(im1, im2)
             #im3 = np.subtract(im1, im2)
             #im3 = Image.fromarray(im3, mode="RGB")
-            im9 = ImageEnhance.Brightness(im4).enhance(1.04)
+            im9 = ImageEnhance.Brightness(im4).enhance(2.2)
             #im7 = conversion_image_PIL_vers_cv2(im9)
             queue3.put(im9)
+            im10 = conversion_image_PIL_vers_cv2(im9)
+            queue4.put(im10)
+
 
 
     #pil or cv to np
